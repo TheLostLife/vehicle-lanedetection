@@ -9,7 +9,6 @@ from moviepy.editor import VideoFileClip
 import numpy as np
 from globals import xm_per_pix, time_window
 from flask import Flask, render_template, Response
-from camera import VideoCamera
 import pdb
 
 

@@ -1,5 +1,4 @@
 from flask import Flask, render_template, Response
-from camera import VideoCamera
 from anik_main import main_func
 from anik_main1 import main_func1 
 
@@ -10,16 +9,20 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')    
 
-
+def gen(camera):
+    while True:
+        frame = camera.get_frame()
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
 @app.route('/video_feed')
 def video_feed():
     return Response(main_func())
 
 @app.route('/front_cam')
-def video_feed():
-    return Response(main_func1())
-
+def camera_feed():
+    return Response(gen(main_func1()),
+        mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
 if __name__ == '__main__':
